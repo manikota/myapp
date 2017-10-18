@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
 <body>
-
+<div id="reload_mess" align="center">
+  <a href='http://localhost:3000/index.html'>Home</a>
+  
+  <a href='http://localhost:3000/logout'>logout</a>
+  <h3> Welcome</h3>
+  <p> Message Anonymously</p>
+<div id="header" align="center">
   <form>
-  <textarea placeholder="Leave a message..." rows="20" cols="100"  required>
-    Leave a message...
-  </textarea>
-  <input type="submit" value="submit">
+  <textarea id="message_area" placeholder="Leave a message..." rows="20" cols="100"  required></textarea>
+  <button type="button" id="message_sub">submit</button>
   </form>
-
+</div>
+<script src="../another.js"></script>
 </body>
 </html>

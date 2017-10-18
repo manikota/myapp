@@ -136,7 +136,7 @@ function loadLogin () {
     };
 
     request.open('GET', 'http://localhost:3000/check-login', true);
-    request.send(null);
+    request.send();
 }
 
 

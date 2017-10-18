@@ -1,4 +1,5 @@
 
+var subdomain = require('express-subdomain');
 	var express=require('express');
 	var morgan=require('morgan');
 	var path=require('path');
@@ -26,12 +27,23 @@
     cookie: { maxAge: 1000 * 60 * 60 * 24 * 30}
 	}));
 //	document.write("Hello world");
-	app.get('/index',function(req,res)
+
+
+app.get('/',function(req,res)
+						{
+							res.sendFile(path.join(__dirname,'ui/index.html'));
+						}
+				);
+	app.get('/index.html',function(req,res)
 							{
 								res.sendFile(path.join(__dirname,'ui/index.html'));
 							}
 					);
-
+	app.get('/another.js',function(req,res)
+					{
+								res.sendFile(path.join(__dirname,'ui/another.js'));
+					}
+				);
 
 	app.get('/style.css',function(req,res)
 							{
@@ -70,30 +82,25 @@
 									}
 						);
 
-		app.get('/message/:input',function(req,res)
+		app.get('/message/:input/',function(req,res)
 									{
 												res.sendFile(path.join(__dirname,'ui/message.html'));
 									});
-
-
 		app.get('/test-db',function(req,res)
 					{
-						var username='mani',data;
-						pool.query('select message from user_messages where username=$1',[username],function(err,result)
-						{
-							if(err)
+						var username='mani',message='hero';
+						pool.query('insert into user_message values($1,$2)',[username,message],function(err,result)
+											{
+												if(err)
 
-								res.status(500).send(err.toString());
+													res.send(err.toString());
 
-								else {
-									var temp=result.rowCount;
-									for(var i=0;i<temp;i++)
+													else {
 
-										res.write(result.rows[i].message);
-
-									res.end();
-								}
-						});
+														res.status(200).write("Thank you");
+														res.write('<br\>');
+													}
+											});
 					}
 				);
 
@@ -122,11 +129,29 @@
       }
    });
 });
+	app.post('/submit',function(req,res)
+					{
+						var username=req.body.username;
+						var message=req.body.message;
+						//res.send(username+message);
+						pool.query('insert into user_message values($1,$2)',[username,message],function(err,result)
+											{
+												if(err)
 
+													res.send(err.toString());
+
+													else {
+
+														res.write('Thank you');
+														res.write('<br\>');
+														res.end();
+													}
+											});
+					});
 	app.post('/dashboard',function(req,res)
 	{
 		var username=req.body.username;
-		pool.query('select message from user_messages where username=$1',[username],function(err,result)
+		pool.query('select message from user_message where username=$1',[username],function(err,result)
 		{
 			if(err)
 
@@ -193,4 +218,6 @@ app.get('/logout', function (req, res) {
    delete req.session.auth;
    res.send('<html><body>Logged out!<br/><br/><a href="/">Back to home</a></body></html>');
 });
+
+
 app.listen(3000);
